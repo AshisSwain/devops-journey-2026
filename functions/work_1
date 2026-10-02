@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+set  -euo pipefail
+
+file="/etc/ssh/sshd_config"
+
+if [[ -f "$file" ]]; then
+    echo "File exists"
+else
+    echo "File does not exist"
+fi
+
+check_service() {
+	local service="$1"
+
+	if systemctl is-active --quiet "$service"; then
+		echo "PASS: $service"
+		return 0
+	fi
+
+	echo "FAIL: $service"
+	return 1
+}
+
+check_service ssh
+check_service docker
