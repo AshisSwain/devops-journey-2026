@@ -33,11 +33,15 @@ jobs:
         run: |
           bash -n scripts/system_info.sh
           bash -n scripts/service_health.sh
+          bash -n scripts/system_info_1.sh
+          bash -n scripts/service_health_1.sh
 
       - name: Run ShellCheck
         run: |
           shellcheck scripts/system_info.sh
           shellcheck scripts/service_health.sh
+          shellcheck scripts/system_info_1.sh
+          shellcheck scripts/service_health_1.sh
 
       - name: Run Python health check
         run: python3 scripts/python/system_health.py
