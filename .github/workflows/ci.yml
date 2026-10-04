@@ -1,0 +1,46 @@
+name: DevOps CI
+
+on:
+  push:
+    branches:
+      - main
+      - dockerize-app
+  pull_request:
+
+jobs:
+  validate:
+    name: Validate Project
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+
+      - name: Install dependencies
+        working-directory: ./app
+        run: npm ci
+
+      - name: Check JavaScript syntax
+        working-directory: ./app
+        run: node --check server.js
+
+      - name: Check Bash syntax
+        run: |
+          bash -n scripts/system_info.sh
+          bash -n scripts/service_health.sh
+
+      - name: Run ShellCheck
+        run: |
+          shellcheck scripts/system_info.sh
+          shellcheck scripts/service_health.sh
+
+      - name: Run Python health check
+        run: python3 scripts/python/system_health.py
+
+      - name: Build Docker image
+        run: docker build -t devops-api:${{ github.sha }} ./app
