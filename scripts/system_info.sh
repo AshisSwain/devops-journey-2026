@@ -2,9 +2,12 @@
 
 set -euo pipefail
 
-readonly SCRIPT_NAME="$(basename "$0")"
-readonly DISK_THRESHOLD=80
-readonly MEMORY_THRESHOLD=80
+SCRIPT_NAME="$(basename "$0")"
+readonly SCRIPT_NAME
+DISK_THRESHOLD=80
+readonly DISK_THRESHOLD
+MEMORY_THRESHOLD=80
+readonly MEMORY_THRESHOLD
 
 log() {
     echo "[$(date '+%Y-%m-%d %H:%M:%S')] $*"
@@ -49,6 +52,7 @@ main() {
 
     check_disk || failures=$((failures + 1))
     check_ssh || failures=$((failures + 1))
+echo "Alert limit set at: ${MEMORY_THRESHOLD}%"
 
     if (( failures > 0 )); then
         log "Health check FAILED: ${failures} check(s) failed"
