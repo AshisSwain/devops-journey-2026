@@ -1,0 +1,20 @@
+stages:
+  - validate
+  - test
+
+validate_bash:
+  stage: validate
+  image: bash:5.2
+  script:
+    - bash -n scripts/system_info.sh
+    - bash -n scripts/service_health.sh
+    - bash -n scripts/system_info_1.sh
+    - bash -n scripts/service_health_1.sh
+
+test_application:
+  stage: test
+  image: node:22-alpine
+  script:
+    - cd app
+    - npm ci
+    - node --check server.js
